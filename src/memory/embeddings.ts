@@ -18,6 +18,7 @@ import {
 import { createOllamaEmbeddingProvider, type OllamaEmbeddingClient } from "./embeddings-ollama.js";
 import { createOpenAiEmbeddingProvider, type OpenAiEmbeddingClient } from "./embeddings-openai.js";
 import { createVoyageEmbeddingProvider, type VoyageEmbeddingClient } from "./embeddings-voyage.js";
+import { importNodeLlamaCpp } from "./node-llama.js";
 
 export type { GeminiEmbeddingClient } from "./embeddings-gemini.js";
 export type { MistralEmbeddingClient } from "./embeddings-mistral.js";
@@ -108,8 +109,7 @@ async function createLocalEmbeddingProvider(
   const modelCacheDir = options.local?.modelCacheDir?.trim();
 
   // Lazy-load node-llama-cpp to keep startup light unless local is enabled.
-  const { getLlama, resolveModelFile, LlamaLogLevel }: typeof import("node-llama-cpp") =
-    await import("node-llama-cpp");
+  const { getLlama, resolveModelFile, LlamaLogLevel } = await importNodeLlamaCpp();
 
   let llama: Llama | null = null;
   let embeddingModel: LlamaModel | null = null;
